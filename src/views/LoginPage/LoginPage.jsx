@@ -35,12 +35,34 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email && password && !errors.email && !errors.password) {
-      navigate("/main"); // ✅ Redirige a /main si el formulario es válido
+    if (!isValid) return;
+  
+    try {
+      const response = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        alert("Inicio de sesión exitoso");
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token); // Guarda el token
+        navigate("/main");
+      } else {
+        alert("Credenciales incorrectas");
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+      alert("Hubo un problema al iniciar sesión");
     }
   };
+  
+  
 
   const isValid = email && password && !errors.email && !errors.password;
 
@@ -60,6 +82,8 @@ export default function Login() {
                 </label>
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   placeholder="ejemplo@gmail.com"
                   className={`block w-full px-6 py-3 text-black bg-white border ${
                     errors.email ? "border-red-500" : "border-gray-200"
@@ -78,6 +102,8 @@ export default function Login() {
                 </label>
                 <input
                   type="password"
+                  name="password"
+                  autoComplete="password"
                   placeholder="********"
                   className={`block w-full px-6 py-3 text-black bg-white border ${
                     errors.password ? "border-red-500" : "border-gray-200"
@@ -101,6 +127,12 @@ export default function Login() {
                   Inicia Sesión
                 </button>
               </div>
+              <a
+                onClick={() => navigate("/register")}
+                className="block text-center text-sm text-gray-600 hover:underline"
+              >
+                ¿No tienes una cuenta? Registrate
+              </a>
             </div>
           </form>
         </div>

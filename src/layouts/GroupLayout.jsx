@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardPage from "../views/Dashboard/DashboardPage";
 import Sidebar from "../components/Sidebar";
+import GroupsPage from "../views/Groups/GroupsPage";
 
 export default function MainLayout() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function MainLayout() {
 
       {/* Contenido principal con scroll */}
       <div className=" flex-1 h-screen w-full pl-64 overflow-auto p-6">
-        <DashboardPage />
+        <GroupsPage />
       </div>
     </div>
   );
